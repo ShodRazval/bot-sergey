@@ -1,9 +1,6 @@
-import pymongo
 import os
 from pymongo.database import Database
 from pymongo import MongoClient
-from urllib.parse import quote_plus
-# from application.datasource.connections.mongo_connector import *
 
 __database_name = os.environ.get('MONGO_DATABASE_NAME')
 # __username = os.environ.get('MONGO_DB_USERNAME')
@@ -15,7 +12,6 @@ __connection_string = os.environ.get('MONGO_CONNECTION_STRING')
 __users_collection_name = os.environ.get('MONGO_USERS_COLLECTION_NAME')
 __jokes_collection_name = os.environ.get('MONGO_JOKES_COLLECTION_NAME')
 __words_collection_name = os.environ.get('MONGO_JOKE_TRIGGERS_COLLECTION_NAME')
-__foul_lang_collection_name = os.environ.get('MONGO_FOUL_LANGUAGE_COLLECTION_NAME')
 
 # jokes collection fields names
 __hash_field = os.environ.get('JOKES_HASH_FIELD_NAME')
@@ -49,7 +45,6 @@ def init_db():
     users_collection = bot_serega_db_connection[__users_collection_name]
     jokes_collection = bot_serega_db_connection[__jokes_collection_name]
     words_collection = bot_serega_db_connection[__words_collection_name]
-    foul_lang_collection = bot_serega_db_connection[__foul_lang_collection_name]
 
     users_collection.create_index([(__user_id_field, 1)], name=__user_index, unique=True)
     jokes_collection.create_index([(__hash_field, 1)], name=__hash_index, unique=True)
@@ -69,7 +64,6 @@ def get_mongo_client():
     return __mongo_client
 
 
-# TODO: DELETE
 def get_datas(db: Database, client: MongoClient):
     print(f'collections => {db.list_collection_names()}')
     print(f'databases => {client.list_database_names()}')

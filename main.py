@@ -1,28 +1,16 @@
-import configuration
-from application.dataset_api.parse_utils import ParseUtils
 from application.datasource.repositories.repositories import MongoRepositories
-from application.telegram_bot.bot_controller import init_bot_handlers, run_bot
+from application.telegram_bot.bot_controller import run_bot
+from application.telegram_bot.bot_processor import init_processor
 
 
 def main():
     # Init datasource
     repositories = MongoRepositories.instance()
 
-    pars_utils = ParseUtils(
-        repositories.get_jokes_repository(),
-        repositories.get_words_repository()
-    )
-    # await pars_utils.parse_html_jokes('messages.html')
-    # pars_utils.add_triggers()
-
-    # get_file_extension('messages.html')
-
-    # Init bot controller, setup repositories
-    init_bot_handlers(
+    init_processor(
         repositories.get_jokes_repository(),
         repositories.get_users_repository(),
-        repositories.get_words_repository(),
-        pars_utils
+        repositories.get_words_repository()
     )
 
     # Start bot

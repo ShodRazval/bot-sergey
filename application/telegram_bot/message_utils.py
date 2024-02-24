@@ -1,8 +1,8 @@
-
 division_remainder = (2, 3, 4)
 
+
 def get_word_form(count):
-    if (count % 10 in division_remainder):
+    if count % 10 in division_remainder:
         return 'раза'
     else:
         return 'раз'
