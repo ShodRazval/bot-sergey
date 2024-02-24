@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  mongodb_aboba:
+  mongodb_db:
     restart: always
     image: mongo:latest
     volumes:
@@ -24,7 +24,7 @@ services:
 #    environment:
 #      - BOT_API_TOKEN=$API_TOKEN
     depends_on:
-      - mongodb_aboba
+      - mongodb_db
     links:
-      - mongodb_aboba
+      - mongodb_db
     command: python main.py
