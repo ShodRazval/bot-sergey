@@ -12,7 +12,7 @@ from application.telegram_bot.bot_dto import BotAnswer
 from application.telegram_bot.bot_processor import process_private_chat_message, process_public_chat_message, \
     process_start_command, process_new_jokes, process_stats_command
 
-__bot_token = users = os.environ.get('API_TOKEN')
+__bot_token = os.environ.get('API_TOKEN')
 __update_jokes_token = os.environ.get('UPDATE_JOKES_TOKEN')
 
 __bot = Bot(token=__bot_token)

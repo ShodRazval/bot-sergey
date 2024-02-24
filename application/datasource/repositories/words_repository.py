@@ -15,7 +15,6 @@ __my_name = ['серж', 'серг', 'serg', 'сереж', 'серёж', 'сер
 
 class WordsRepository:
     __words_collection_name = os.environ.get('MONGO_JOKE_TRIGGERS_COLLECTION_NAME')
-    # __foul_lang_collection_name = os.environ.get('MONGO_FOUL_LANGUAGE_COLLECTION_NAME')
 
     # dictionary collcetion fields names
     __grop_field = os.environ.get('GROUP_FIELD_NAME')
@@ -25,7 +24,6 @@ class WordsRepository:
     __foul_lang_grope = os.environ.get('FOUL_LANG_TRIGGER_GROPE')
 
     __trigger_words_collection: Collection[Words]
-    # __foul_lang_collection: Collection[Words]
 
     def __init__(self, mongo_connection):
         self.__trigger_words_collection = mongo_connection[self.__words_collection_name]

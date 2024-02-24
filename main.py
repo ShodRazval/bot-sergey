@@ -1,3 +1,4 @@
+import configuration
 from application.datasource.repositories.repositories import MongoRepositories
 from application.telegram_bot.bot_controller import run_bot
 from application.telegram_bot.bot_processor import init_processor
