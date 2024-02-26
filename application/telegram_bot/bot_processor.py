@@ -55,7 +55,7 @@ async def process_public_chat_message(msg: types.Message) -> BotAnswer:
         if any(word in msg.text.lower() for word in greet_triggers):
             bot_answer.set_reply(f'Здарова, {user_first_name}!')
         if any(word in msg.text.lower() for word in joke_triggers):
-            bot_answer.set_joke(await __joke_repository.get_random_joke())
+            bot_answer.set_joke(__joke_repository.get_random_joke())
     else:
         delta = last_time_joke - datetime.now()
         if delta.total_seconds() / 60 / 60 > 1 and random.randint(1, 10) > 5:
