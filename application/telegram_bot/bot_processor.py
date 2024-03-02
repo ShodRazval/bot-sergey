@@ -57,9 +57,7 @@ async def process_public_chat_message(msg: types.Message) -> BotAnswer:
         if any(word in msg.text.lower() for word in joke_triggers):
             bot_answer.set_joke(__joke_repository.get_random_joke())
     else:
-        delta = last_time_joke - datetime.now()
-        if delta.total_seconds() / 60 / 60 > 1 and random.randint(1, 10) > 5:
-            bot_answer.set_joke(__joke_repository.get_random_joke())
+        _what_about_joke(bot_answer)
     return bot_answer
 
 
@@ -114,6 +112,16 @@ async def process_new_jokes(msg: types.Message, bot: Bot) -> BotAnswer:
             bot_answer.set_reply(f'Не получилось добавить {unprocessed_count} из {len(jokes)}')
 
     return bot_answer
+
+
+def _what_about_joke(answer: BotAnswer):
+    global last_time_joke
+    delta = datetime.now() - last_time_joke
+    total_hours = delta.total_seconds() / 60 / 60
+    random_value = random.randint(1, 10)
+    if total_hours > 1 and random_value > 5:
+        last_time_joke = datetime.now()
+        answer.set_joke(__joke_repository.get_random_joke())
 
 
 def _get_message_text(message: types.Message) -> str:
