@@ -36,11 +36,13 @@ __mongo_client: MongoClient
 def init_db():
     mongo_client = MongoClient(__connection_string)
 
+    bot_serega_db_connection: Database
+
     if __database_name not in mongo_client.list_database_names():
         print(f'Warn! DataBase <{__database_name}> does not exist!')
-        return
-
-    bot_serega_db_connection = mongo_client.get_database(__database_name)
+        bot_serega_db_connection = mongo_client[__database_name]
+    else:
+        bot_serega_db_connection = mongo_client.get_database(__database_name)
 
     users_collection = bot_serega_db_connection[__users_collection_name]
     jokes_collection = bot_serega_db_connection[__jokes_collection_name]
