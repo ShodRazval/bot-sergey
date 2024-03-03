@@ -3,11 +3,10 @@ from pymongo.database import Database
 from pymongo import MongoClient
 
 __database_name = os.environ.get('MONGO_DATABASE_NAME')
-# __username = os.environ.get('MONGO_DB_USERNAME')
-# __password = os.environ.get('MONGO_DB_PASSWORD')
-# __connection_string = os.environ.get('MONGO_URI')
-# uri = "mongodb://%s:%s@%s" % (quote_plus(__username), quote_plus(__password), quote_plus(__connection_string))
-__connection_string = os.environ.get('MONGO_CONNECTION_STRING')
+__username = os.environ.get('MONGO_DB_USERNAME')
+__password = os.environ.get('MONGO_DB_PASSWORD')
+__host = os.environ.get('MONGO_HOST')
+__port = os.environ.get('MONGO_PORT')
 
 __users_collection_name = os.environ.get('MONGO_USERS_COLLECTION_NAME')
 __jokes_collection_name = os.environ.get('MONGO_JOKES_COLLECTION_NAME')
@@ -34,7 +33,11 @@ __mongo_client: MongoClient
 
 
 def init_db():
-    mongo_client = MongoClient(__connection_string)
+    mongo_client = MongoClient(host=__host,
+                               port=int(__port),
+                               username=__username,
+                               password=__password,
+                               authMechanism='SCRAM-SHA-256')
 
     bot_serega_db_connection: Database
 
@@ -65,7 +68,3 @@ def get_mongo_client():
     global __mongo_client
     return __mongo_client
 
-
-def get_datas(db: Database, client: MongoClient):
-    print(f'collections => {db.list_collection_names()}')
-    print(f'databases => {client.list_database_names()}')

@@ -6,6 +6,7 @@ services:
     image: mongo:latest
     volumes:
       - ./docker_data/db:/data/db
+      - ./mongo:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
     command: mongod
@@ -13,8 +14,9 @@ services:
       - .env
     environment:
       MONGO_DATA_DIR: /docker_data/db
-      # MONGO_INITDB_ROOT_USERNAME: $MONGO_DB_USERNAME
-      # MONGO_INITDB_ROOT_PASSWORD: $MONGO_DB_PASSWORD
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
 
   bot:
     build: .
