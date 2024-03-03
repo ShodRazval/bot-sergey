@@ -61,4 +61,7 @@ async def reply(msg: types.Message, answer: BotAnswer):
 
 
 def run_bot():
+    logger.info("======================================\n" +
+                "                              Bot-Sergey\n" +
+                "================================================================================")
     executor.start_polling(dp)
