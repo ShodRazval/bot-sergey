@@ -28,3 +28,15 @@ services:
     links:
       - mongodb_db
     command: python main.py
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    command: redis-server
+    volumes:
+        - ./storage/redis/data:/data
+  scheduler:
+    entrypoint: ./docker/scheduler.sh
+    depends_on:
+      - redis
