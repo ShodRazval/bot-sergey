@@ -8,6 +8,7 @@ from application.dataset_api.parse_utils import parse_html_jokes
 from application.datasource.repositories.jokes_repository import JokesRepository
 from application.datasource.repositories.users_stats_repository import UserStatsRepository
 from application.datasource.repositories.words_repository import WordsRepository
+from application.flow.flow_service import FlowService
 from application.telegram_bot.bot_dto import BotAnswer
 from application.telegram_bot.message_utils import get_user_id, get_user_first_name, get_word_form
 
@@ -26,14 +27,18 @@ __update_jokes_token = os.environ.get('UPDATE_JOKES_TOKEN')
 
 supported_file_extension = '.html'  # TODO: should be used in process_new_jokes()
 
+__flow_service: FlowService
+
 
 def init_processor(jokes_repository,
                    users_repository,
-                   words_repository):
-    global __joke_repository, __users_repository, __words_repository
+                   words_repository,
+                   flow_service):
+    global __joke_repository, __users_repository, __words_repository, __flow_service
     __joke_repository = jokes_repository
     __users_repository = users_repository
     __words_repository = words_repository
+    __flow_service = flow_service
 
     for joke in __words_repository.get_joke_triggers():
         joke_triggers.add(joke)
@@ -44,21 +49,8 @@ def init_processor(jokes_repository,
 
 
 async def process_public_chat_message(msg: types.Message) -> BotAnswer:
-    bot_answer = BotAnswer()
-    user_first_name = get_user_first_name(msg)
-
-    if any(word in msg.text.lower() for word in __my_name):
-        if any(word in msg.text.lower() for word in foul_lang_triggers):
-            __users_repository.fuck_off_inc(get_user_id(msg))
-            bot_answer.set_reply(f'Пошел нахуй, {user_first_name}!')
-            return bot_answer
-        if any(word in msg.text.lower() for word in greet_triggers):
-            bot_answer.set_reply(f'Здарова, {user_first_name}!')
-        if any(word in msg.text.lower() for word in joke_triggers):
-            bot_answer.set_joke(__joke_repository.get_random_joke())
-    else:
-        _what_about_joke(bot_answer)
-    return bot_answer
+    global __flow_service
+    return __flow_service.handle(msg)
 
 
 async def process_private_chat_message(msg: types.Message) -> BotAnswer:
@@ -84,6 +76,11 @@ async def process_start_command(msg: types.Message) -> BotAnswer:
     __users_repository.fuck_off_inc(user_id)
     bot_answer.set_reply(f'Отъебись, {user_name}!')
     return bot_answer
+
+
+async def process_setting_info_command(msg: types.Message) -> BotAnswer:
+    global __flow_service
+    return __flow_service.get_current_flow(msg)
 
 
 async def process_stats_command(msg: types.Message) -> BotAnswer:
