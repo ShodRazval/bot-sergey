@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 
 required_file_extension = '.html'
 
+haram_words = {'Видео Долбоёба', 'ничё)', 'ачё)' 'Shot post', 'Cursed images', 'WEBM', 'подписчики', 'подпишитесь'}
 
 def parse_html_jokes(file: str) -> list:
     soup = BeautifulSoup(file, 'html.parser')
@@ -10,13 +11,16 @@ def parse_html_jokes(file: str) -> list:
 
 
 def beautify_jokes(jokes: list) -> list:
+    global haram_words
     jokes_parsed = []
     for joke in jokes:
-        # tmp = re.sub('[^ ](-|—|-|–)', ' —', joke)
-        # tmp = re.sub('(-|—|-|–)[^ ]', '— ', tmp)
-        tmp = joke.strip()
-        if len(tmp) > 10 and tmp.find('http') == -1:
-            jokes_parsed.append(tmp)
+        if any(word in joke.lower() for word in haram_words):
+            print(joke)
+            print('\n=====================================================================================================================================\n')
+        else:
+            tmp = joke.strip()
+            if len(tmp) > 10 and tmp.find('http') == -1:
+                jokes_parsed.append(tmp)
     return jokes_parsed
 
 
